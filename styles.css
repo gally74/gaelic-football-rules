@@ -870,65 +870,7 @@ body {
     font-weight: 500;
 }
 
-/* Mode toggle styles */
-.mode-toggle {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    background: #f8fafc;
-    padding: 0.75rem;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-}
 
-.toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    flex: 1;
-    text-align: center;
-    justify-content: center;
-}
-
-.toggle-label input[type="radio"] {
-    display: none;
-}
-
-.toggle-label input[type="radio"]:checked + .toggle-text {
-    background: #3b82f6;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-weight: 600;
-}
-
-.toggle-text {
-    font-weight: 500;
-    color: #64748b;
-    transition: all 0.2s ease;
-}
-
-.question-section {
-    margin-bottom: 1rem;
-}
-
-.form-hint {
-    display: block;
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-    color: #64748b;
-    font-style: italic;
-}
-
-.btn-sm {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
 
 /* Modal */
 .modal {

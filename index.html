@@ -169,10 +169,42 @@
                 <button class="close-btn" id="closeModal">&times;</button>
             </div>
             <form id="addQuestionForm">
+                <!-- Question Generation Mode Toggle -->
                 <div class="form-group">
-                    <label for="questionText">Question:</label>
-                    <textarea id="questionText" required placeholder="Enter your question here..."></textarea>
+                    <div class="mode-toggle">
+                        <label class="toggle-label">
+                            <input type="radio" name="questionMode" value="manual" checked>
+                            <span class="toggle-text">Manual Question</span>
+                        </label>
+                        <label class="toggle-label">
+                            <input type="radio" name="questionMode" value="generate">
+                            <span class="toggle-text">Generate from Answer</span>
+                        </label>
+                    </div>
                 </div>
+                
+                <!-- Manual Question Section -->
+                <div id="manualQuestionSection" class="question-section">
+                    <div class="form-group">
+                        <label for="questionText">Question:</label>
+                        <textarea id="questionText" placeholder="Enter your question here..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Generate from Answer Section -->
+                <div id="generateQuestionSection" class="question-section" style="display: none;">
+                    <div class="form-group">
+                        <label for="answerText">Answer:</label>
+                        <textarea id="answerText" placeholder="Enter the answer (e.g., '15 players per team', 'Yellow card', 'Free kick to opposition')..."></textarea>
+                        <small class="form-hint">💡 Tip: Be specific with your answer. The system will generate an appropriate question.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="generatedQuestion">Generated Question:</label>
+                        <textarea id="generatedQuestion" readonly placeholder="Question will be generated automatically..."></textarea>
+                        <button type="button" id="regenerateQuestionBtn" class="btn btn-secondary btn-sm">🔄 Regenerate Question</button>
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <label for="questionCategory">Category:</label>
                     <select id="questionCategory" required>
@@ -185,14 +217,17 @@
                         <option value="scenarios">Game Scenarios</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
                     <label for="questionAnswer">Answer:</label>
                     <textarea id="questionAnswer" required placeholder="Enter the correct answer..."></textarea>
                 </div>
+                
                 <div class="form-group">
                     <label for="questionExplanation">Explanation (optional):</label>
                     <textarea id="questionExplanation" placeholder="Add any additional explanation or rule reference..."></textarea>
                 </div>
+                
                 <div class="form-actions">
                     <button type="button" id="cancelAdd" class="btn btn-secondary">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Question</button>

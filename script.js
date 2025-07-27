@@ -162,6 +162,23 @@ function setupEventListeners() {
     // Form submission
     addQuestionForm.addEventListener('submit', handleAddQuestion);
     
+    // Question generation mode toggle
+    document.querySelectorAll('input[name="questionMode"]').forEach(radio => {
+        radio.addEventListener('change', toggleQuestionMode);
+    });
+    
+    // Answer text input for question generation
+    const answerText = document.getElementById('answerText');
+    if (answerText) {
+        answerText.addEventListener('input', generateQuestionFromAnswer);
+    }
+    
+    // Regenerate question button
+    const regenerateBtn = document.getElementById('regenerateQuestionBtn');
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', generateQuestionFromAnswer);
+    }
+    
     // Search functionality
     searchInput.addEventListener('input', handleSearch);
     
@@ -225,6 +242,120 @@ function switchTab(tabName) {
         loadQuestions();
     } else if (tabName === 'categories') {
         updateCategoryCounts();
+    }
+}
+
+// Question Generation Functions
+function toggleQuestionMode() {
+    const manualSection = document.getElementById('manualQuestionSection');
+    const generateSection = document.getElementById('generateQuestionSection');
+    const questionText = document.getElementById('questionText');
+    const answerText = document.getElementById('answerText');
+    
+    const isGenerateMode = document.querySelector('input[name="questionMode"]:checked').value === 'generate';
+    
+    if (isGenerateMode) {
+        manualSection.style.display = 'none';
+        generateSection.style.display = 'block';
+        questionText.removeAttribute('required');
+        answerText.setAttribute('required', 'required');
+    } else {
+        manualSection.style.display = 'block';
+        generateSection.style.display = 'none';
+        questionText.setAttribute('required', 'required');
+        answerText.removeAttribute('required');
+    }
+}
+
+function generateQuestionFromAnswer() {
+    const answerText = document.getElementById('answerText');
+    const generatedQuestion = document.getElementById('generatedQuestion');
+    const questionText = document.getElementById('questionText');
+    
+    if (!answerText || !generatedQuestion) return;
+    
+    const answer = answerText.value.trim();
+    if (!answer) {
+        generatedQuestion.value = '';
+        return;
+    }
+    
+    const question = generateQuestionFromAnswerText(answer);
+    generatedQuestion.value = question;
+    questionText.value = question; // Also populate the manual question field
+}
+
+function generateQuestionFromAnswerText(answer) {
+    const answerLower = answer.toLowerCase();
+    
+    // Define question templates based on answer patterns
+    const questionTemplates = {
+        // Player count answers
+        '15 players': 'How many players are on each team in Gaelic football?',
+        '15 players per team': 'How many players are on each team in Gaelic football?',
+        'fifteen players': 'How many players are on each team in Gaelic football?',
+        
+        // Card-related answers
+        'yellow card': 'What is the penalty for this foul?',
+        'red card': 'What is the penalty for this serious foul?',
+        'black card': 'What is the penalty for cynical behavior?',
+        
+        // Free kick answers
+        'free kick': 'What is the penalty for this infringement?',
+        'free kick to the opposing team': 'What is the penalty for this foul?',
+        'free kick to opposition': 'What is the penalty for this foul?',
+        
+        // Time-related answers
+        '30 minutes': 'How long is each half in Gaelic football?',
+        '35 minutes': 'How long is each half in Gaelic football?',
+        '60 minutes': 'How long is the total game time?',
+        
+        // Distance answers
+        '13 meters': 'How far must opponents be from a free kick?',
+        '20 meters': 'How far must opponents be from a penalty kick?',
+        '45 meters': 'How far is the penalty spot from goal?',
+        
+        // Specific penalties
+        'penalty kick': 'What is awarded for a foul inside the large rectangle?',
+        'penalty': 'What is awarded for a serious foul inside the large rectangle?',
+        
+        // Goalkeeper answers
+        'goalkeeper': 'What is the rule regarding the goalkeeper?',
+        'keeper': 'What is the rule regarding the goalkeeper?',
+        
+        // Ball handling
+        'overcarrying': 'What is the penalty for overcarrying the ball?',
+        'overcarry': 'What is the penalty for overcarrying the ball?',
+        'handpass': 'What is the rule for handpassing?',
+        'hand pass': 'What is the rule for handpassing?',
+        
+        // Scoring
+        'goal': 'How many points is a goal worth?',
+        'point': 'How many points is a point worth?',
+        '3 points': 'How many points is a goal worth?',
+        '1 point': 'How many points is a point worth?'
+    };
+    
+    // Try to find a matching template
+    for (const [pattern, template] of Object.entries(questionTemplates)) {
+        if (answerLower.includes(pattern)) {
+            return template;
+        }
+    }
+    
+    // If no specific pattern found, generate a generic question
+    if (answerLower.includes('card')) {
+        return 'What is the penalty for this type of foul?';
+    } else if (answerLower.includes('kick') || answerLower.includes('free')) {
+        return 'What is the penalty for this infringement?';
+    } else if (answerLower.includes('players') || answerLower.includes('team')) {
+        return 'How many players are involved in this situation?';
+    } else if (answerLower.includes('minutes') || answerLower.includes('time')) {
+        return 'What is the time duration for this rule?';
+    } else if (answerLower.includes('meters') || answerLower.includes('distance')) {
+        return 'What is the distance requirement for this rule?';
+    } else {
+        return 'What is the correct answer for this GAA rule?';
     }
 }
 

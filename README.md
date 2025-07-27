@@ -1,4 +1,4 @@
-# GAA Referee Quick Reference App
+# Gaelic Football Rules - Referee Quick Reference App
 
 A mobile-friendly web application for GAA referees to create custom questions and test their knowledge of the rules before games.
 

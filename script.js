@@ -443,6 +443,163 @@ function startQuiz() {
     showQuizQuestion();
 }
 
+// Generate intelligent wrong answers based on question context
+function generateIntelligentWrongAnswers(currentQuestion) {
+    const questionText = currentQuestion.question.toLowerCase();
+    const correctAnswer = currentQuestion.answer.toLowerCase();
+    const category = currentQuestion.category;
+    
+    // Define context-specific wrong answers
+    const wrongAnswerTemplates = {
+        // Player count questions
+        'how many players': [
+            '11 players per team',
+            '13 players per team', 
+            '16 players per team'
+        ],
+        'number of players': [
+            '11 players per team',
+            '13 players per team',
+            '16 players per team'
+        ],
+        
+        // Time-related questions
+        'how long': [
+            '30 minutes per half',
+            '45 minutes per half',
+            '60 minutes per half'
+        ],
+        'duration': [
+            '30 minutes per half',
+            '45 minutes per half', 
+            '60 minutes per half'
+        ],
+        
+        // Distance questions
+        'how far': [
+            '10 meters',
+            '20 meters',
+            '30 meters'
+        ],
+        'distance': [
+            '10 meters',
+            '20 meters',
+            '30 meters'
+        ],
+        
+        // Penalty questions
+        'penalty': [
+            'Yellow card',
+            'Red card',
+            'Free kick from 45 meters'
+        ],
+        'penalty for': [
+            'Yellow card',
+            'Red card', 
+            'Free kick from 45 meters'
+        ],
+        
+        // Free kick questions
+        'free kick': [
+            'Penalty kick',
+            'Yellow card',
+            'Red card'
+        ],
+        
+        // Card questions
+        'yellow card': [
+            'Red card',
+            'Black card',
+            'Free kick to opposition'
+        ],
+        'red card': [
+            'Yellow card',
+            'Black card',
+            'Free kick to opposition'
+        ],
+        'black card': [
+            'Yellow card',
+            'Red card',
+            'Free kick to opposition'
+        ]
+    };
+    
+    // Category-specific wrong answers
+    const categoryWrongAnswers = {
+        technical: [
+            'Red card',
+            'Black card',
+            'Penalty kick'
+        ],
+        aggressive: [
+            'Yellow card',
+            'Free kick to opposition',
+            'Penalty kick'
+        ],
+        dissent: [
+            'Yellow card',
+            'Red card',
+            'Free kick to opposition'
+        ],
+        setplay: [
+            'Yellow card',
+            'Red card',
+            'Black card'
+        ],
+        general: [
+            'Yellow card',
+            'Red card',
+            'Black card'
+        ],
+        scenarios: [
+            'Yellow card',
+            'Red card',
+            'Free kick to opposition'
+        ]
+    };
+    
+    // Try to find context-specific wrong answers
+    let wrongAnswers = [];
+    
+    // Check for specific question patterns
+    for (const [pattern, answers] of Object.entries(wrongAnswerTemplates)) {
+        if (questionText.includes(pattern)) {
+            wrongAnswers = answers.filter(answer => 
+                answer.toLowerCase() !== correctAnswer
+            );
+            break;
+        }
+    }
+    
+    // If no specific pattern found, use category-based answers
+    if (wrongAnswers.length === 0) {
+        wrongAnswers = categoryWrongAnswers[category] || [
+            'Yellow card',
+            'Red card',
+            'Free kick to opposition'
+        ];
+    }
+    
+    // Ensure we have exactly 3 wrong answers
+    while (wrongAnswers.length < 3) {
+        const fallbackAnswers = [
+            'Yellow card',
+            'Red card',
+            'Free kick to opposition',
+            'Penalty kick',
+            'Black card'
+        ];
+        
+        const randomAnswer = fallbackAnswers[Math.floor(Math.random() * fallbackAnswers.length)];
+        if (!wrongAnswers.includes(randomAnswer) && randomAnswer.toLowerCase() !== correctAnswer) {
+            wrongAnswers.push(randomAnswer);
+        }
+    }
+    
+    // Return exactly 3 wrong answers
+    return wrongAnswers.slice(0, 3);
+}
+
 function showQuizQuestion() {
     const question = currentQuiz[currentQuestionIndex];
     if (!question) return;
@@ -466,12 +623,8 @@ function showQuizQuestion() {
     
     quizQuestion.textContent = question.question;
     
-    // Create options (correct answer + 3 random wrong answers)
-    const wrongAnswers = questions
-        .filter(q => q.id !== question.id)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3)
-        .map(q => q.answer);
+    // Create intelligent wrong answers based on question context
+    const wrongAnswers = generateIntelligentWrongAnswers(question);
     
     const options = [question.answer, ...wrongAnswers].sort(() => Math.random() - 0.5);
     

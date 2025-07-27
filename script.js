@@ -528,28 +528,172 @@ function showAnswer() {
 function showQuizResults() {
     quizContainer.style.display = 'none';
     quizResults.style.display = 'block';
-    quizScoreElement.textContent = `${quizScore}/${currentQuiz.length}`;
     
     const percentage = (quizScore / currentQuiz.length) * 100;
-    let message = '';
+    const totalQuestions = currentQuiz.length;
     
-    if (percentage >= 80) {
-        message = 'Excellent! You\'re ready for the game!';
+    // Determine performance level and badge
+    let performanceLevel, badge, message, color, emoji;
+    
+    if (percentage >= 90) {
+        performanceLevel = 'Outstanding';
+        badge = '🏆 Champion Referee';
+        message = 'Exceptional knowledge! You\'re a true GAA rules expert.';
+        color = '#fbbf24';
+        emoji = '🏆';
+    } else if (percentage >= 80) {
+        performanceLevel = 'Excellent';
+        badge = '🥇 Gold Medal';
+        message = 'Excellent work! You\'re ready for any game situation.';
+        color = '#fbbf24';
+        emoji = '🥇';
+    } else if (percentage >= 70) {
+        performanceLevel = 'Very Good';
+        badge = '🥈 Silver Medal';
+        message = 'Very good performance! A bit more practice and you\'ll be perfect.';
+        color = '#9ca3af';
+        emoji = '🥈';
     } else if (percentage >= 60) {
-        message = 'Good job! A bit more practice needed.';
+        performanceLevel = 'Good';
+        badge = '🥉 Bronze Medal';
+        message = 'Good job! Keep studying to improve your knowledge.';
+        color = '#d97706';
+        emoji = '🥉';
+    } else if (percentage >= 40) {
+        performanceLevel = 'Fair';
+        badge = '📚 Student';
+        message = 'Fair performance. More study time needed before your next game.';
+        color = '#6b7280';
+        emoji = '📚';
     } else {
-        message = 'Keep studying! Review the rules before your game.';
+        performanceLevel = 'Needs Improvement';
+        badge = '🔄 Practice Needed';
+        message = 'Keep studying! Review the rules thoroughly before your next game.';
+        color = '#ef4444';
+        emoji = '🔄';
+    }
+    
+    // Calculate category performance
+    const categoryStats = {};
+    currentQuiz.forEach((question, index) => {
+        const category = question.category;
+        if (!categoryStats[category]) {
+            categoryStats[category] = { total: 0, correct: 0 };
+        }
+        categoryStats[category].total++;
+        // Note: We don't track individual question results, so this is simplified
+    });
+    
+    // Generate category breakdown HTML
+    const categoryBreakdown = Object.entries(categoryStats).map(([category, stats]) => `
+        <div class="category-stat">
+            <span class="category-name">${getCategoryName(category)}</span>
+            <span class="category-score">${stats.total} questions</span>
+        </div>
+    `).join('');
+    
+    // Generate study recommendations
+    let studyRecommendations = '';
+    if (percentage < 80) {
+        studyRecommendations = `
+            <div class="study-recommendations">
+                <h4>📖 Study Recommendations:</h4>
+                <ul>
+                    <li>Review the questions you missed</li>
+                    <li>Focus on your weaker categories</li>
+                    <li>Take more practice quizzes</li>
+                    <li>Read through the official GAA rules</li>
+                </ul>
+            </div>
+        `;
     }
     
     quizResults.innerHTML = `
-        <h3>Quiz Complete!</h3>
-        <p>Score: <span id="quizScore">${quizScore}/${currentQuiz.length}</span></p>
-        <p style="margin-bottom: 1.5rem; font-style: italic;">${message}</p>
-        <button id="retakeQuizBtn" class="btn btn-primary">Take Another Quiz</button>
+        <div class="results-container">
+            <div class="results-header">
+                <div class="performance-badge" style="background: ${color}">
+                    <span class="badge-emoji">${emoji}</span>
+                    <span class="badge-text">${badge}</span>
+                </div>
+                <h3>Quiz Complete!</h3>
+                <p class="performance-level">${performanceLevel} Performance</p>
+            </div>
+            
+            <div class="score-section">
+                <div class="score-circle" style="border-color: ${color}">
+                    <div class="score-number">${quizScore}</div>
+                    <div class="score-total">/ ${totalQuestions}</div>
+                    <div class="score-percentage">${Math.round(percentage)}%</div>
+                </div>
+                <p class="score-message">${message}</p>
+            </div>
+            
+            <div class="stats-section">
+                <h4>📊 Quiz Statistics:</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Questions Answered</span>
+                        <span class="stat-value">${totalQuestions}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Correct Answers</span>
+                        <span class="stat-value">${quizScore}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Accuracy</span>
+                        <span class="stat-value">${Math.round(percentage)}%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Performance</span>
+                        <span class="stat-value">${performanceLevel}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-breakdown">
+                <h4>📋 Categories Tested:</h4>
+                <div class="category-stats">
+                    ${categoryBreakdown}
+                </div>
+            </div>
+            
+            ${studyRecommendations}
+            
+            <div class="results-actions">
+                <button id="retakeQuizBtn" class="btn btn-primary">🔄 Take Another Quiz</button>
+                <button id="reviewQuestionsBtn" class="btn btn-secondary">📚 Review Questions</button>
+                <button id="shareResultsBtn" class="btn btn-support">📤 Share Results</button>
+            </div>
+        </div>
     `;
     
-    // Re-attach event listener
+    // Re-attach event listeners
     document.getElementById('retakeQuizBtn').addEventListener('click', startQuiz);
+    document.getElementById('reviewQuestionsBtn').addEventListener('click', () => {
+        switchTab('study');
+        showNotification('Switch to Study Mode to review all questions', 'info');
+    });
+    document.getElementById('shareResultsBtn').addEventListener('click', shareResults);
+}
+
+function shareResults() {
+    const percentage = (quizScore / currentQuiz.length) * 100;
+    const shareText = `🏐 GAA Referee Quiz Results: ${quizScore}/${currentQuiz.length} (${Math.round(percentage)}%) - Test your knowledge at https://gally74.github.io/gaelic-football-rules`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'GAA Referee Quiz Results',
+            text: shareText,
+            url: 'https://gally74.github.io/gaelic-football-rules'
+        });
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(shareText).then(() => {
+            showNotification('Results copied to clipboard!', 'success');
+        }).catch(() => {
+            showNotification('Share feature not available', 'error');
+        });
+    }
 }
 
 function resetQuiz() {

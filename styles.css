@@ -584,16 +584,206 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.quiz-results h3 {
-    font-size: 1.5rem;
+.results-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.results-header {
+    margin-bottom: 2rem;
+}
+
+.performance-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.125rem;
     margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.badge-emoji {
+    font-size: 1.5rem;
+}
+
+.badge-text {
+    font-size: 1rem;
+}
+
+.quiz-results h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.performance-level {
+    font-size: 1.25rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.score-section {
+    margin-bottom: 2rem;
+}
+
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border: 8px solid;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    background: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.score-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.score-total {
+    font-size: 1.25rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.score-percentage {
+    font-size: 1rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.score-message {
+    font-size: 1.125rem;
+    color: #374151;
+    font-weight: 500;
+    margin: 0;
+}
+
+.stats-section {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.stats-section h4 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: #1e293b;
 }
 
-.quiz-results p {
+.category-breakdown {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.category-breakdown h4 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.category-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.category-name {
+    font-weight: 500;
+    color: #374151;
+}
+
+.category-score {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.study-recommendations {
+    margin-bottom: 2rem;
+    text-align: left;
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.study-recommendations h4 {
     font-size: 1.125rem;
-    margin-bottom: 1.5rem;
-    color: #64748b;
+    color: #92400e;
+    margin-bottom: 1rem;
+}
+
+.study-recommendations ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.study-recommendations li {
+    color: #92400e;
+    margin-bottom: 0.5rem;
+}
+
+.results-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.results-actions .btn {
+    min-width: 140px;
 }
 
 /* Categories */
@@ -952,5 +1142,42 @@ body {
     .footer-support-btn {
         font-size: 0.75rem;
         padding: 0.625rem 1.25rem;
+    }
+    
+    /* Quiz results responsive */
+    .score-circle {
+        width: 120px;
+        height: 120px;
+        border-width: 6px;
+    }
+    
+    .score-number {
+        font-size: 2rem;
+    }
+    
+    .score-total {
+        font-size: 1rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-actions {
+        flex-direction: column;
+    }
+    
+    .results-actions .btn {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .performance-badge {
+        font-size: 1rem;
+        padding: 0.625rem 1.25rem;
+    }
+    
+    .badge-emoji {
+        font-size: 1.25rem;
     }
 } 

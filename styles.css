@@ -134,66 +134,131 @@ body {
 .support-section {
     margin-top: 3rem;
     text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .support-text {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    font-weight: 400;
+    color: white;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .support-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    background: #ff6b6b;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
     color: white;
     text-decoration: none;
-    padding: 0.75rem 1.5rem;
+    padding: 1rem 2rem;
     border-radius: 50px;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 1.25rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.support-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.support-btn:hover::before {
+    left: 100%;
 }
 
 .support-btn:hover {
-    background: #ff5252;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    background: linear-gradient(135deg, #ff5252 0%, #ff7676 100%);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.support-btn:active {
+    transform: translateY(-1px) scale(1.02);
 }
 
 .support-icon {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 /* Support button in header */
 .btn-support {
-    background: #ff6b6b !important;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%) !important;
     color: white !important;
-    border: none;
-    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-support::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-support:hover::before {
+    left: 100%;
 }
 
 .btn-support:hover {
-    background: #ff5252 !important;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #ff5252 0%, #ff7676 100%) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 @media (max-width: 768px) {
     .support-section {
         margin-top: 2rem;
+        padding: 1.5rem;
     }
     
     .support-text {
-        font-size: 0.875rem;
+        font-size: 1.125rem;
     }
     
     .support-btn {
-        font-size: 0.875rem;
-        padding: 0.625rem 1.25rem;
+        font-size: 1.125rem;
+        padding: 0.875rem 1.75rem;
+    }
+    
+    .support-icon {
+        font-size: 1.25rem;
     }
 }
 

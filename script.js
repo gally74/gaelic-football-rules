@@ -288,74 +288,215 @@ function generateQuestionFromAnswer() {
 function generateQuestionFromAnswerText(answer) {
     const answerLower = answer.toLowerCase();
     
-    // Define question templates based on answer patterns
-    const questionTemplates = {
-        // Player count answers
-        '15 players': 'How many players are on each team in Gaelic football?',
-        '15 players per team': 'How many players are on each team in Gaelic football?',
-        'fifteen players': 'How many players are on each team in Gaelic football?',
-        
-        // Card-related answers
-        'yellow card': 'What is the penalty for this foul?',
-        'red card': 'What is the penalty for this serious foul?',
-        'black card': 'What is the penalty for cynical behavior?',
-        
-        // Free kick answers
-        'free kick': 'What is the penalty for this infringement?',
-        'free kick to the opposing team': 'What is the penalty for this foul?',
-        'free kick to opposition': 'What is the penalty for this foul?',
-        
-        // Time-related answers
-        '30 minutes': 'How long is each half in Gaelic football?',
-        '35 minutes': 'How long is each half in Gaelic football?',
-        '60 minutes': 'How long is the total game time?',
-        
-        // Distance answers
-        '13 meters': 'How far must opponents be from a free kick?',
-        '20 meters': 'How far must opponents be from a penalty kick?',
-        '45 meters': 'How far is the penalty spot from goal?',
-        
-        // Specific penalties
-        'penalty kick': 'What is awarded for a foul inside the large rectangle?',
-        'penalty': 'What is awarded for a serious foul inside the large rectangle?',
-        
-        // Goalkeeper answers
-        'goalkeeper': 'What is the rule regarding the goalkeeper?',
-        'keeper': 'What is the rule regarding the goalkeeper?',
-        
-        // Ball handling
-        'overcarrying': 'What is the penalty for overcarrying the ball?',
-        'overcarry': 'What is the penalty for overcarrying the ball?',
-        'handpass': 'What is the rule for handpassing?',
-        'hand pass': 'What is the rule for handpassing?',
-        
-        // Scoring
-        'goal': 'How many points is a goal worth?',
-        'point': 'How many points is a point worth?',
-        '3 points': 'How many points is a goal worth?',
-        '1 point': 'How many points is a point worth?'
-    };
+    // Extract key elements from the answer for better question generation
+    const keyElements = extractKeyElements(answer);
     
-    // Try to find a matching template
-    for (const [pattern, template] of Object.entries(questionTemplates)) {
-        if (answerLower.includes(pattern)) {
-            return template;
-        }
+    // Generate specific questions based on the content
+    if (keyElements.type === 'throw-in') {
+        return generateThrowInQuestion(keyElements);
+    } else if (keyElements.type === 'positioning') {
+        return generatePositioningQuestion(keyElements);
+    } else if (keyElements.type === 'procedure') {
+        return generateProcedureQuestion(keyElements);
+    } else if (keyElements.type === 'penalty') {
+        return generatePenaltyQuestion(keyElements);
+    } else if (keyElements.type === 'rule') {
+        return generateRuleQuestion(keyElements);
+    } else {
+        return generateGenericQuestion(keyElements);
+    }
+}
+
+function extractKeyElements(answer) {
+    const answerLower = answer.toLowerCase();
+    
+    // Check for specific rule types
+    if (answerLower.includes('throw') && answerLower.includes('ball')) {
+        return {
+            type: 'throw-in',
+            referee: answerLower.includes('referee'),
+            players: answerLower.includes('players'),
+            positioning: answerLower.includes('position') || answerLower.includes('45m') || answerLower.includes('halfway'),
+            timing: answerLower.includes('half-time') || answerLower.includes('2nd half'),
+            elements: extractPositioningElements(answer)
+        };
     }
     
-    // If no specific pattern found, generate a generic question
-    if (answerLower.includes('card')) {
-        return 'What is the penalty for this type of foul?';
-    } else if (answerLower.includes('kick') || answerLower.includes('free')) {
-        return 'What is the penalty for this infringement?';
-    } else if (answerLower.includes('players') || answerLower.includes('team')) {
-        return 'How many players are involved in this situation?';
-    } else if (answerLower.includes('minutes') || answerLower.includes('time')) {
-        return 'What is the time duration for this rule?';
-    } else if (answerLower.includes('meters') || answerLower.includes('distance')) {
-        return 'What is the distance requirement for this rule?';
+    if (answerLower.includes('card') || answerLower.includes('penalty') || answerLower.includes('free kick')) {
+        return {
+            type: 'penalty',
+            cardType: answerLower.includes('yellow') ? 'yellow' : 
+                     answerLower.includes('red') ? 'red' : 
+                     answerLower.includes('black') ? 'black' : null,
+            foulType: extractFoulType(answer),
+            penalty: extractPenaltyType(answer)
+        };
+    }
+    
+    if (answerLower.includes('position') || answerLower.includes('stand') || answerLower.includes('line')) {
+        return {
+            type: 'positioning',
+            elements: extractPositioningElements(answer)
+        };
+    }
+    
+    if (answerLower.includes('procedure') || answerLower.includes('start') || answerLower.includes('restart')) {
+        return {
+            type: 'procedure',
+            elements: extractProcedureElements(answer)
+        };
+    }
+    
+    return {
+        type: 'rule',
+        elements: extractGeneralElements(answer)
+    };
+}
+
+function extractPositioningElements(answer) {
+    const elements = [];
+    const answerLower = answer.toLowerCase();
+    
+    if (answerLower.includes('45m')) elements.push('45m line');
+    if (answerLower.includes('halfway')) elements.push('halfway line');
+    if (answerLower.includes('sideline')) elements.push('sideline');
+    if (answerLower.includes('defensive')) elements.push('defensive side');
+    if (answerLower.includes('opposite')) elements.push('opposite sides');
+    
+    return elements;
+}
+
+function extractFoulType(answer) {
+    const answerLower = answer.toLowerCase();
+    
+    if (answerLower.includes('overcarry')) return 'overcarrying';
+    if (answerLower.includes('handpass')) return 'handpassing';
+    if (answerLower.includes('dissent')) return 'dissent';
+    if (answerLower.includes('cynical')) return 'cynical behavior';
+    if (answerLower.includes('aggressive')) return 'aggressive foul';
+    
+    return 'foul';
+}
+
+function extractPenaltyType(answer) {
+    const answerLower = answer.toLowerCase();
+    
+    if (answerLower.includes('free kick')) return 'free kick';
+    if (answerLower.includes('penalty')) return 'penalty';
+    if (answerLower.includes('card')) return 'card';
+    
+    return 'penalty';
+}
+
+function extractProcedureElements(answer) {
+    const elements = [];
+    const answerLower = answer.toLowerCase();
+    
+    if (answerLower.includes('start')) elements.push('game start');
+    if (answerLower.includes('restart')) elements.push('game restart');
+    if (answerLower.includes('half-time')) elements.push('half-time');
+    if (answerLower.includes('throw')) elements.push('throw-in');
+    
+    return elements;
+}
+
+function extractGeneralElements(answer) {
+    const elements = [];
+    const answerLower = answer.toLowerCase();
+    
+    if (answerLower.includes('players')) elements.push('players');
+    if (answerLower.includes('referee')) elements.push('referee');
+    if (answerLower.includes('team')) elements.push('teams');
+    if (answerLower.includes('ball')) elements.push('ball');
+    
+    return elements;
+}
+
+function generateThrowInQuestion(elements) {
+    if (elements.referee && elements.positioning) {
+        return 'How does the referee conduct the throw-in and where must players be positioned?';
+    } else if (elements.timing) {
+        return 'What is the procedure for the throw-in at the start of the game and after half-time?';
+    } else if (elements.players) {
+        return 'What is the correct procedure for the throw-in, including player positioning?';
     } else {
-        return 'What is the correct answer for this GAA rule?';
+        return 'What is the proper throw-in procedure in Gaelic football?';
+    }
+}
+
+function generatePositioningQuestion(elements) {
+    if (elements.elements.includes('45m line')) {
+        return 'Where must players be positioned during the throw-in procedure?';
+    } else if (elements.elements.includes('halfway line')) {
+        return 'What are the positioning requirements for players at the halfway line during throw-in?';
+    } else if (elements.elements.includes('sideline')) {
+        return 'What is the rule regarding player positioning on the sidelines during throw-in?';
+    } else {
+        return 'What are the positioning requirements for this situation?';
+    }
+}
+
+function generateProcedureQuestion(elements) {
+    if (elements.elements.includes('game start')) {
+        return 'What is the correct procedure for starting the game?';
+    } else if (elements.elements.includes('half-time')) {
+        return 'What happens at half-time regarding player positioning?';
+    } else if (elements.elements.includes('throw-in')) {
+        return 'What is the proper throw-in procedure?';
+    } else {
+        return 'What is the correct procedure for this situation?';
+    }
+}
+
+function generatePenaltyQuestion(elements) {
+    if (elements.cardType) {
+        return `What type of foul results in a ${elements.cardType} card?`;
+    } else if (elements.foulType) {
+        return `What is the penalty for ${elements.foulType}?`;
+    } else if (elements.penalty) {
+        return `What type of infringement results in a ${elements.penalty}?`;
+    } else {
+        return 'What is the penalty for this type of foul?';
+    }
+}
+
+function generateRuleQuestion(elements) {
+    if (elements.elements.includes('players') && elements.elements.includes('referee')) {
+        return 'What is the rule regarding player and referee interaction?';
+    } else if (elements.elements.includes('teams')) {
+        return 'What is the rule regarding team positioning?';
+    } else if (elements.elements.includes('ball')) {
+        return 'What is the rule regarding ball handling?';
+    } else {
+        return 'What is the specific rule being described?';
+    }
+}
+
+function generateGenericQuestion(elements) {
+    // For complex answers, generate a more specific question
+    // We need to get the original answer text from the input field
+    const answerText = document.getElementById('answerText');
+    const answerLower = answerText ? answerText.value.toLowerCase() : '';
+    
+    // Handle the specific throw-in rule you mentioned
+    if (answerLower.includes('referee') && answerLower.includes('throw') && answerLower.includes('ball') && answerLower.includes('between')) {
+        return 'What is the complete throw-in procedure, including referee action, player positioning, and halftime changes?';
+    } else if (answerLower.includes('referee') && answerLower.includes('throw')) {
+        return 'What is the referee\'s role in the throw-in procedure?';
+    } else if (answerLower.includes('players') && answerLower.includes('position')) {
+        return 'What are the positioning requirements for players in this situation?';
+    } else if (answerLower.includes('halfway') && answerLower.includes('line')) {
+        return 'What are the rules regarding the halfway line in this procedure?';
+    } else if (answerLower.includes('45m') && answerLower.includes('line')) {
+        return 'What is the significance of the 45m line in this rule?';
+    } else if (answerLower.includes('sideline') && answerLower.includes('swap')) {
+        return 'What happens with sideline positioning between halves?';
+    } else if (answerLower.includes('defensive') && answerLower.includes('side')) {
+        return 'What are the positioning requirements for players on their defensive sides?';
+    } else if (answerLower.includes('second player') && answerLower.includes('sideline')) {
+        return 'What is the role and positioning of the second player during throw-in?';
+    } else {
+        return 'What is the complete procedure described in this rule?';
     }
 }
 

@@ -8,11 +8,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
+    <!-- Landing Page -->
+    <div id="landingPage" class="landing-page">
+        <div class="landing-content">
+            <h1>Gaelic Football Rules</h1>
+            <p class="landing-subtitle">Referee Quick Reference App</p>
+            
+            <div class="landing-buttons">
+                <button id="adminAccessBtn" class="landing-btn admin-btn">
+                    <div class="btn-icon">👑</div>
+                    <div class="btn-text">
+                        <h3>Admin Access</h3>
+                        <p>Add, edit, and manage questions</p>
+                    </div>
+                </button>
+                
+                <button id="userAccessBtn" class="landing-btn user-btn">
+                    <div class="btn-icon">📚</div>
+                    <div class="btn-text">
+                        <h3>Study & Quiz</h3>
+                        <p>Browse questions and take quizzes</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden initially) -->
+    <div id="mainApp" class="app-container" style="display: none;">
         <!-- Header -->
         <header class="header">
             <h1>Gaelic Football Rules</h1>
             <div class="header-actions">
+                <button id="backToLandingBtn" class="btn btn-secondary">← Back</button>
                 <button id="adminLoginBtn" class="btn btn-secondary" style="display: none;">Admin Login</button>
                 <button id="addQuestionBtn" class="btn btn-primary" style="display: none;">+ Add Question</button>
             </div>

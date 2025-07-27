@@ -4,6 +4,7 @@ let currentQuiz = null;
 let currentQuestionIndex = 0;
 let quizScore = 0;
 let isAdmin = false; // Track if user is admin (you)
+let currentMode = 'landing'; // Track current mode: 'landing', 'user', 'admin'
 
 // DOM Elements
 const addQuestionBtn = document.getElementById('addQuestionBtn');
@@ -36,16 +37,49 @@ const deleteQuestionBtn = document.getElementById('deleteQuestionBtn');
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    checkAdminStatus();
+    setupEventListeners();
+    showLandingPage();
+});
+
+// Navigation functions
+function showLandingPage() {
+    document.getElementById('landingPage').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
+    currentMode = 'landing';
+}
+
+function showMainApp() {
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
     loadQuestions();
     updateCategoryCounts();
-    setupEventListeners();
-});
+}
+
+function showAdminMode() {
+    const password = prompt('Enter admin password:');
+    if (password === 'cZ8lp41FF1QmzCF') {
+        localStorage.setItem('gaaAdminPassword', password);
+        isAdmin = true;
+        currentMode = 'admin';
+        showMainApp();
+        showAdminControls();
+        showNotification('Admin access granted!', 'success');
+    } else if (password !== null) {
+        showNotification('Incorrect password!', 'error');
+    }
+}
+
+function showUserMode() {
+    isAdmin = false;
+    currentMode = 'user';
+    showMainApp();
+    hideAdminControls();
+}
 
 // Check if user is admin (you)
 function checkAdminStatus() {
     // Simple admin check - you can modify this password
-    const adminPassword = 'gaelic2024'; // Change this to your preferred password
+    const adminPassword = 'cZ8lp41FF1QmzCF'; // Updated password
     const storedPassword = localStorage.getItem('gaaAdminPassword');
     
     if (storedPassword === adminPassword) {
@@ -102,7 +136,24 @@ function setupEventListeners() {
     cancelAdd.addEventListener('click', () => hideModal(addQuestionModal));
     closeDetailModal.addEventListener('click', () => hideModal(questionDetailModal));
     
-    // Admin login
+    // Landing page buttons
+    const adminAccessBtn = document.getElementById('adminAccessBtn');
+    const userAccessBtn = document.getElementById('userAccessBtn');
+    const backToLandingBtn = document.getElementById('backToLandingBtn');
+    
+    if (adminAccessBtn) {
+        adminAccessBtn.addEventListener('click', showAdminMode);
+    }
+    
+    if (userAccessBtn) {
+        userAccessBtn.addEventListener('click', showUserMode);
+    }
+    
+    if (backToLandingBtn) {
+        backToLandingBtn.addEventListener('click', showLandingPage);
+    }
+    
+    // Admin login (for existing admin users)
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     if (adminLoginBtn) {
         adminLoginBtn.addEventListener('click', showAdminLogin);
@@ -551,7 +602,7 @@ function getCategoryName(category) {
 
 function showAdminLogin() {
     const password = prompt('Enter admin password:');
-    if (password === 'gaelic2024') { // Change this to your preferred password
+    if (password === 'cZ8lp41FF1QmzCF') { // Updated password
         localStorage.setItem('gaaAdminPassword', password);
         isAdmin = true;
         showAdminControls();

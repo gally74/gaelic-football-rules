@@ -447,7 +447,14 @@ function showQuizQuestion() {
     const question = currentQuiz[currentQuestionIndex];
     if (!question) return;
     
-    quizProgress.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuiz.length}`;
+    const percentage = currentQuestionIndex > 0 ? (quizScore / currentQuestionIndex) * 100 : 0;
+    
+    quizProgress.innerHTML = `
+        <div class="quiz-progress-info">
+            <span class="question-counter">Question ${currentQuestionIndex + 1} of ${currentQuiz.length}</span>
+            <span class="current-score">Score: ${quizScore}/${currentQuestionIndex} (${Math.round(percentage)}%)</span>
+        </div>
+    `;
     progressFill.style.width = `${((currentQuestionIndex + 1) / currentQuiz.length) * 100}%`;
     
     quizQuestion.textContent = question.question;
@@ -495,6 +502,16 @@ function selectAnswer(optionElement) {
                 opt.classList.add('correct');
             }
         });
+    }
+    
+    // Update the progress display with new score
+    const percentage = (quizScore / (currentQuestionIndex + 1)) * 100;
+    const progressInfo = document.querySelector('.quiz-progress-info');
+    if (progressInfo) {
+        progressInfo.innerHTML = `
+            <span class="question-counter">Question ${currentQuestionIndex + 1} of ${currentQuiz.length}</span>
+            <span class="current-score ${isCorrect ? 'score-correct' : 'score-incorrect'}">Score: ${quizScore}/${currentQuestionIndex + 1} (${Math.round(percentage)}%)</span>
+        `;
     }
     
     showAnswerBtn.style.display = 'none';

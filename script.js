@@ -3,6 +3,7 @@ let questions = JSON.parse(localStorage.getItem('gaaQuestions')) || [];
 let currentQuiz = null;
 let currentQuestionIndex = 0;
 let quizScore = 0;
+let isAdmin = false; // Track if user is admin (you)
 
 // DOM Elements
 const addQuestionBtn = document.getElementById('addQuestionBtn');
@@ -35,10 +36,63 @@ const deleteQuestionBtn = document.getElementById('deleteQuestionBtn');
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
+    checkAdminStatus();
     loadQuestions();
     updateCategoryCounts();
     setupEventListeners();
 });
+
+// Check if user is admin (you)
+function checkAdminStatus() {
+    // Simple admin check - you can modify this password
+    const adminPassword = 'gaelic2024'; // Change this to your preferred password
+    const storedPassword = localStorage.getItem('gaaAdminPassword');
+    
+    if (storedPassword === adminPassword) {
+        isAdmin = true;
+        showAdminControls();
+    } else {
+        hideAdminControls();
+    }
+}
+
+function showAdminControls() {
+    // Show admin-only elements
+    const addQuestionBtn = document.getElementById('addQuestionBtn');
+    if (addQuestionBtn) addQuestionBtn.style.display = 'inline-flex';
+    
+    // Add admin indicator
+    const header = document.querySelector('.header');
+    if (header && !document.getElementById('adminIndicator')) {
+        const adminIndicator = document.createElement('div');
+        adminIndicator.id = 'adminIndicator';
+        adminIndicator.innerHTML = '👑 Admin Mode';
+        adminIndicator.style.cssText = `
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        `;
+        header.appendChild(adminIndicator);
+    }
+}
+
+function hideAdminControls() {
+    // Hide admin-only elements
+    const addQuestionBtn = document.getElementById('addQuestionBtn');
+    if (addQuestionBtn) addQuestionBtn.style.display = 'none';
+    
+    // Show admin login button
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    if (adminLoginBtn) adminLoginBtn.style.display = 'inline-flex';
+    
+    // Remove admin indicator
+    const adminIndicator = document.getElementById('adminIndicator');
+    if (adminIndicator) adminIndicator.remove();
+}
 
 // Event Listeners
 function setupEventListeners() {
@@ -47,6 +101,12 @@ function setupEventListeners() {
     closeModal.addEventListener('click', () => hideModal(addQuestionModal));
     cancelAdd.addEventListener('click', () => hideModal(addQuestionModal));
     closeDetailModal.addEventListener('click', () => hideModal(questionDetailModal));
+    
+    // Admin login
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    if (adminLoginBtn) {
+        adminLoginBtn.addEventListener('click', showAdminLogin);
+    }
     
     // Form submission
     addQuestionForm.addEventListener('submit', handleAddQuestion);
@@ -194,9 +254,15 @@ function loadQuestions(filter = '') {
                     <span class="category-badge">${getCategoryName(q.category)}</span>
                     <span>${new Date(q.createdAt).toLocaleDateString()}</span>
                 </div>
-                <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">
-                    💡 Tap to view, edit, or delete
-                </div>
+                ${isAdmin ? `
+                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">
+                        💡 Tap to view, edit, or delete
+                    </div>
+                ` : `
+                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">
+                        💡 Tap to view
+                    </div>
+                `}
             </div>
         `).join('');
 }
@@ -231,6 +297,19 @@ function showQuestionDetail(questionId) {
     
     // Store current question ID for edit/delete
     questionDetailContent.dataset.questionId = questionId;
+    
+    // Show/hide admin buttons based on admin status
+    const editBtn = document.getElementById('editQuestionBtn');
+    const deleteBtn = document.getElementById('deleteQuestionBtn');
+    
+    if (isAdmin) {
+        editBtn.style.display = 'inline-flex';
+        deleteBtn.style.display = 'inline-flex';
+    } else {
+        editBtn.style.display = 'none';
+        deleteBtn.style.display = 'none';
+    }
+    
     showModal(questionDetailModal);
 }
 
@@ -468,6 +547,18 @@ function getCategoryName(category) {
         scenarios: 'Game Scenarios'
     };
     return names[category] || category;
+}
+
+function showAdminLogin() {
+    const password = prompt('Enter admin password:');
+    if (password === 'gaelic2024') { // Change this to your preferred password
+        localStorage.setItem('gaaAdminPassword', password);
+        isAdmin = true;
+        showAdminControls();
+        showNotification('Admin access granted!', 'success');
+    } else if (password !== null) {
+        showNotification('Incorrect password!', 'error');
+    }
 }
 
 function showNotification(message, type = 'info') {

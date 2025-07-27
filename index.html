@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAA Referee Quick Reference</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>GAA Referee Quick Reference</h1>
+            <div class="header-actions">
+                <button id="addQuestionBtn" class="btn btn-primary">+ Add Question</button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="study">Study Mode</button>
+            <button class="tab-btn" data-tab="quiz">Quiz Mode</button>
+            <button class="tab-btn" data-tab="categories">Categories</button>
+        </nav>
+
+        <!-- Study Mode -->
+        <div id="studyMode" class="tab-content active">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search questions..." class="search-input">
+            </div>
+            <div id="questionsList" class="questions-list">
+                <!-- Questions will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Quiz Mode -->
+        <div id="quizMode" class="tab-content">
+            <div class="quiz-controls">
+                <button id="startQuizBtn" class="btn btn-primary">Start Quiz</button>
+                <button id="resetQuizBtn" class="btn btn-secondary" style="display: none;">Reset Quiz</button>
+            </div>
+            <div id="quizContainer" class="quiz-container" style="display: none;">
+                <div class="quiz-progress">
+                    <span id="quizProgress">Question 1 of 5</span>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                </div>
+                <div id="quizQuestion" class="quiz-question"></div>
+                <div id="quizOptions" class="quiz-options"></div>
+                <div class="quiz-actions">
+                    <button id="nextQuestionBtn" class="btn btn-primary" style="display: none;">Next Question</button>
+                    <button id="showAnswerBtn" class="btn btn-secondary">Show Answer</button>
+                </div>
+            </div>
+            <div id="quizResults" class="quiz-results" style="display: none;">
+                <h3>Quiz Complete!</h3>
+                <p>Score: <span id="quizScore">0/0</span></p>
+                <button id="retakeQuizBtn" class="btn btn-primary">Take Another Quiz</button>
+            </div>
+        </div>
+
+        <!-- Categories Mode -->
+        <div id="categoriesMode" class="tab-content">
+            <div class="categories-grid">
+                <div class="category-card" data-category="technical">
+                    <h3>Technical Fouls</h3>
+                    <p>Overcarrying, handpassing, etc.</p>
+                    <span class="question-count">0 questions</span>
+                </div>
+                <div class="category-card" data-category="aggressive">
+                    <h3>Aggressive Fouls</h3>
+                    <p>Cautions, cynical behavior</p>
+                    <span class="question-count">0 questions</span>
+                </div>
+                <div class="category-card" data-category="dissent">
+                    <h3>Dissent</h3>
+                    <p>Player/official misconduct</p>
+                    <span class="question-count">0 questions</span>
+                </div>
+                <div class="category-card" data-category="setplay">
+                    <h3>Set Play</h3>
+                    <p>Free kicks, penalties, kick-outs</p>
+                    <span class="question-count">0 questions</span>
+                </div>
+                <div class="category-card" data-category="general">
+                    <h3>General Rules</h3>
+                    <p>Basic ball handling, positioning</p>
+                    <span class="question-count">0 questions</span>
+                </div>
+                <div class="category-card" data-category="scenarios">
+                    <h3>Game Scenarios</h3>
+                    <p>Real match situations</p>
+                    <span class="question-count">0 questions</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Question Modal -->
+    <div id="addQuestionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Question</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="addQuestionForm">
+                <div class="form-group">
+                    <label for="questionText">Question:</label>
+                    <textarea id="questionText" required placeholder="Enter your question here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="questionCategory">Category:</label>
+                    <select id="questionCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="technical">Technical Fouls</option>
+                        <option value="aggressive">Aggressive Fouls</option>
+                        <option value="dissent">Dissent</option>
+                        <option value="setplay">Set Play</option>
+                        <option value="general">General Rules</option>
+                        <option value="scenarios">Game Scenarios</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="questionAnswer">Answer:</label>
+                    <textarea id="questionAnswer" required placeholder="Enter the correct answer..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="questionExplanation">Explanation (optional):</label>
+                    <textarea id="questionExplanation" placeholder="Add any additional explanation or rule reference..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelAdd" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Question Detail Modal -->
+    <div id="questionDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Question Details</h2>
+                <button class="close-btn" id="closeDetailModal">&times;</button>
+            </div>
+            <div id="questionDetailContent">
+                <!-- Question details will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <button id="editQuestionBtn" class="btn btn-secondary">Edit</button>
+                <button id="deleteQuestionBtn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

@@ -15,7 +15,7 @@
             <p class="landing-subtitle">Referee Quick Reference App</p>
             
             <div class="landing-buttons">
-                <button id="adminAccessBtn" class="landing-btn admin-btn">
+                <button class="landing-btn admin-btn">
                     <div class="btn-icon">👑</div>
                     <div class="btn-text">
                         <h3>Admin Access</h3>
@@ -23,7 +23,7 @@
                     </div>
                 </button>
                 
-                <button id="userAccessBtn" class="landing-btn user-btn">
+                <button class="landing-btn user-btn">
                     <div class="btn-icon">📚</div>
                     <div class="btn-text">
                         <h3>Study & Quiz</h3>
@@ -34,10 +34,9 @@
             
             <div class="support-section">
                 <div class="support-header">
-                    <img src="referee-photo.jpeg" alt="GAA Referee" class="referee-photo">
                     <div class="support-info">
-                        <h3>Meet the Referee</h3>
-                        <p>Created by Roy Galvin</p>
+                        <h3>Created by Roy Galvin</h3>
+                        <p>Gaelic Football Rules Expert</p>
                     </div>
                 </div>
                 <p class="support-text">If you find this app helpful, consider supporting the developer:</p>
@@ -69,12 +68,38 @@
             <button class="tab-btn active" data-tab="study">Study Mode</button>
             <button class="tab-btn" data-tab="quiz">Quiz Mode</button>
             <button class="tab-btn" data-tab="categories">Categories</button>
+            <button class="tab-btn" data-tab="rules">Rules Reference</button>
+            <button class="tab-btn" data-tab="quickref">Quick Reference</button>
+            <button class="tab-btn" data-tab="exams">Previous Exams</button>
+            <button class="tab-btn" data-tab="analytics">Analytics</button>
         </nav>
+
+        <!-- Header Controls -->
+        <div class="header-controls">
+            <div class="control-group">
+                <button id="darkModeToggle" class="control-btn" title="Toggle Dark Mode">
+                    🌙
+                </button>
+                <button id="voiceCommandBtn" class="control-btn" title="Voice Commands">
+                    🎤
+                </button>
+                <button id="studyTimerBtn" class="control-btn" title="Study Timer">
+                    ⏱️
+                </button>
+            </div>
+            <div class="rule-of-day">
+                <span id="ruleOfDayBadge">📖 Rule of the Day</span>
+            </div>
+        </div>
 
         <!-- Study Mode -->
         <div id="studyMode" class="tab-content active">
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search questions..." class="search-input">
+                <div class="smart-search">
+                    <input type="text" id="searchInput" placeholder="Search questions or ask naturally..." class="search-input">
+                    <button id="voiceSearchBtn" class="voice-search-btn">🎤</button>
+                </div>
+                <div id="searchSuggestions" class="search-suggestions"></div>
             </div>
             <div id="questionsList" class="questions-list">
                 <!-- Questions will be loaded here -->
@@ -86,6 +111,7 @@
             <div class="quiz-controls">
                 <button id="startQuizBtn" class="btn btn-primary">Start Quiz</button>
                 <button id="resetQuizBtn" class="btn btn-secondary" style="display: none;">Reset Quiz</button>
+                <button id="exportResultsBtn" class="btn btn-secondary" style="display: none;">📊 Export Results</button>
             </div>
             <div id="quizContainer" class="quiz-container" style="display: none;">
                 <div class="quiz-progress">
@@ -143,12 +169,223 @@
                 </div>
             </div>
         </div>
+
+        <!-- Rules Reference Mode -->
+        <div id="rulesMode" class="tab-content">
+            <div class="rules-header">
+                <h2>Official Gaelic Football Rules</h2>
+                <p>Read the complete official rules and regulations for Gaelic Football</p>
+                <div class="rules-actions">
+                    <button id="downloadRulesBtn" class="btn btn-secondary">
+                        📥 Download PDF
+                    </button>
+                    <button id="fullscreenBtn" class="btn btn-primary">
+                        🔍 Fullscreen
+                    </button>
+                </div>
+            </div>
+            <div class="pdf-container">
+                <iframe 
+                    id="rulesPDF" 
+                    src="Football Rules.pdf#toolbar=1&navpanes=1&scrollbar=1" 
+                    width="100%" 
+                    height="600px"
+                    title="Gaelic Football Rules PDF">
+                </iframe>
+            </div>
+            <div class="rules-info">
+                <h3>📖 How to Use the Rules Reference</h3>
+                <div class="rules-tips">
+                    <div class="tip">
+                        <strong>🔍 Search:</strong> Use Ctrl+F (Cmd+F on Mac) to search within the PDF
+                    </div>
+                    <div class="tip">
+                        <strong>📱 Zoom:</strong> Use the zoom controls in the PDF viewer or browser
+                    </div>
+                    <div class="tip">
+                        <strong>📄 Navigate:</strong> Use the PDF navigation panel to jump to specific sections
+                    </div>
+                    <div class="tip">
+                        <strong>💾 Save:</strong> Click the download button above to save a copy to your device
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference Mode -->
+        <div id="quickrefMode" class="tab-content">
+            <div class="quickref-header">
+                <h2>⚡ Quick Reference Cards</h2>
+                <p>Essential rules at a glance - perfect for pre-match review</p>
+                <div class="quickref-controls">
+                    <button id="prevCardBtn" class="btn btn-secondary">← Previous</button>
+                    <span id="cardCounter">1 of 6</span>
+                    <button id="nextCardBtn" class="btn btn-secondary">Next →</button>
+                </div>
+            </div>
+            <div class="quickref-container">
+                <div id="currentCard" class="quickref-card active">
+                <div class="quickref-card" data-category="technical">
+                    <div class="card-header">
+                        <h3>Technical Fouls</h3>
+                        <span class="card-icon">⚖️</span>
+                    </div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Overcarrying:</strong> Max 4 steps</li>
+                            <li><strong>Handpass:</strong> Fist or open hand</li>
+                            <li><strong>Bouncing:</strong> Once after catch</li>
+                            <li><strong>Throwing:</strong> Not allowed</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quickref-card" data-category="aggressive">
+                    <div class="card-header">
+                        <h3>Aggressive Fouls</h3>
+                        <span class="card-icon">🛡️</span>
+                    </div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Yellow Card:</strong> Caution</li>
+                            <li><strong>Black Card:</strong> 10 min sin bin</li>
+                            <li><strong>Red Card:</strong> Sent off</li>
+                            <li><strong>Charging:</strong> Shoulder to shoulder only</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quickref-card" data-category="setplay">
+                    <div class="card-header">
+                        <h3>Set Play</h3>
+                        <span class="card-icon">🎯</span>
+                    </div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Free Kick:</strong> 13m distance</li>
+                            <li><strong>Penalty:</strong> 11m from goal</li>
+                            <li><strong>Kick-out:</strong> 20m line</li>
+                            <li><strong>45m Free:</strong> From 45m line</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quickref-card" data-category="scoring">
+                    <div class="card-header">
+                        <h3>Scoring</h3>
+                        <span class="card-icon">🥅</span>
+                    </div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Goal:</strong> 3 points</li>
+                            <li><strong>Point:</strong> 1 point</li>
+                            <li><strong>2-Point Free:</strong> Outside 40m arc</li>
+                            <li><strong>Mark:</strong> Clean catch from kick-out</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quickref-card" data-category="timing">
+                    <div class="card-header">
+                        <h3>Timing</h3>
+                        <span class="card-icon">⏰</span>
+                    </div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Game:</strong> 2 x 30 min</li>
+                            <li><strong>Extra Time:</strong> 2 x 10 min</li>
+                            <li><strong>Sin Bin:</strong> 10 minutes</li>
+                            <li><strong>Injury Time:</strong> Referee's discretion</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quickref-card" data-category="players">
+                    <div class="card-header">
+                        <h3>Players</h3>
+                        <span class="card-icon">👥</span>
+                    </div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Team Size:</strong> 15 players</li>
+                            <li><strong>Substitutes:</strong> 6 allowed</li>
+                            <li><strong>Goalkeeper:</strong> Special protection</li>
+                            <li><strong>Captain:</strong> Only one can speak to ref</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Previous Exams Mode -->
+        <div id="examsMode" class="tab-content">
+            <div class="exams-header">
+                <h2>📝 Previous Rules Exams</h2>
+                <p>Practice with real exam questions from previous years</p>
+                <div class="exams-controls">
+                    <button id="addExamBtn" class="btn btn-primary">+ Add Exam</button>
+                    <button id="filterExamsBtn" class="btn btn-secondary">Filter</button>
+                </div>
+            </div>
+            <div id="examsList" class="exams-list">
+                <!-- Exams will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Analytics Mode -->
+        <div id="analyticsMode" class="tab-content">
+            <div class="analytics-header">
+                <h2>📊 Your Learning Analytics</h2>
+                <p>Track your progress and identify areas for improvement</p>
+            </div>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>📈 Overall Progress</h3>
+                    <div class="progress-circle">
+                        <div class="progress-number" id="overallProgress">0%</div>
+                        <div class="progress-label">Average Score</div>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3>🎯 Category Performance</h3>
+                    <div id="categoryChart" class="chart-container">
+                        <!-- Chart will be rendered here -->
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3>⏱️ Study Time</h3>
+                    <div class="study-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalStudyTime">0h 0m</span>
+                            <span class="stat-label">Total Time</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="avgSessionTime">0m</span>
+                            <span class="stat-label">Avg Session</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3>🔥 Streaks</h3>
+                    <div class="streak-info">
+                        <div class="streak-item">
+                            <span class="streak-number" id="currentStreak">0</span>
+                            <span class="streak-label">Day Streak</span>
+                        </div>
+                        <div class="streak-item">
+                            <span class="streak-number" id="bestStreak">0</span>
+                            <span class="streak-label">Best Streak</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="insights-section">
+                <h3>💡 Smart Insights</h3>
+                <div id="insightsList" class="insights-list">
+                    <!-- AI-generated insights will appear here -->
+                </div>
+            </div>
+        </div>
         
         <!-- Footer -->
         <footer class="app-footer">
             <div class="footer-content">
                 <div class="footer-info">
-                    <img src="referee-photo.jpeg" alt="GAA Referee" class="footer-photo">
                     <div class="footer-text">
                         <h4>Created by Roy Galvin</h4>
                         <p>GAA Referee & Developer</p>
@@ -188,8 +425,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="questionAnswer">Answer:</label>
-                    <textarea id="questionAnswer" required placeholder="Enter the correct answer..."></textarea>
+                    <label>Answer Options:</label>
+                    <div id="optionsContainer">
+                        <!-- Option fields will be added here dynamically -->
+                    </div>
+                    <button type="button" id="addOptionBtn" class="btn btn-secondary">+ Add Option</button>
+                    <p class="form-help">Add at least 2 options and select the correct answer</p>
                 </div>
                 
                 <div class="form-group">
@@ -218,6 +459,161 @@
             <div class="modal-actions">
                 <button id="editQuestionBtn" class="btn btn-secondary">Edit</button>
                 <button id="deleteQuestionBtn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen PDF Overlay -->
+    <div id="fullscreenOverlay" class="fullscreen-overlay"></div>
+    <button id="fullscreenClose" class="fullscreen-close">×</button>
+
+    <!-- Study Timer Modal -->
+    <div id="studyTimerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⏱️ Study Timer</h2>
+                <button class="close-btn" id="closeTimerModal">&times;</button>
+            </div>
+            <div class="timer-content">
+                <div class="timer-display">
+                    <div class="time-remaining" id="timeRemaining">25:00</div>
+                    <div class="timer-status" id="timerStatus">Ready to start</div>
+                </div>
+                <div class="timer-controls">
+                    <button id="startTimerBtn" class="btn btn-primary">Start Timer</button>
+                    <button id="pauseTimerBtn" class="btn btn-secondary" style="display: none;">Pause</button>
+                    <button id="resetTimerBtn" class="btn btn-secondary">Reset</button>
+                </div>
+                <div class="timer-settings">
+                    <h4>Timer Settings</h4>
+                    <div class="setting-group">
+                        <label for="studyDuration">Study Duration (minutes):</label>
+                        <input type="number" id="studyDuration" value="25" min="5" max="120">
+                    </div>
+                    <div class="setting-group">
+                        <label for="breakDuration">Break Duration (minutes):</label>
+                        <input type="number" id="breakDuration" value="5" min="1" max="30">
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="autoStartBreaks"> Auto-start breaks
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Commands Modal -->
+    <div id="voiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎤 Voice Commands</h2>
+                <button class="close-btn" id="closeVoiceModal">&times;</button>
+            </div>
+            <div class="voice-content">
+                <div class="voice-status">
+                    <div class="voice-indicator" id="voiceIndicator">
+                        <div class="mic-icon">🎤</div>
+                        <div class="status-text" id="voiceStatus">Click to start listening</div>
+                    </div>
+                </div>
+                <div class="voice-controls">
+                    <button id="startVoiceBtn" class="btn btn-primary">Start Listening</button>
+                    <button id="stopVoiceBtn" class="btn btn-secondary" style="display: none;">Stop Listening</button>
+                </div>
+                <div class="voice-transcript">
+                    <h4>What you said:</h4>
+                    <div id="voiceTranscript" class="transcript-text">Ready for voice input...</div>
+                </div>
+                <div class="voice-commands">
+                    <h4>Available Commands:</h4>
+                    <ul>
+                        <li>"Search for [topic]" - Find questions about a topic</li>
+                        <li>"Show technical fouls" - Filter by category</li>
+                        <li>"Start quiz" - Begin a new quiz</li>
+                        <li>"Show rules" - Open rules reference</li>
+                        <li>"What is [rule]" - Get rule explanation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Exam Modal -->
+    <div id="addExamModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Add Previous Exam</h2>
+                <button class="close-btn" id="closeExamModal">&times;</button>
+            </div>
+            <form id="addExamForm">
+                <div class="form-group">
+                    <label for="examTitle">Exam Title:</label>
+                    <input type="text" id="examTitle" required placeholder="e.g., 2023 County Referee Exam">
+                </div>
+                <div class="form-group">
+                    <label for="examYear">Year:</label>
+                    <input type="number" id="examYear" required min="2000" max="2030" value="2023">
+                </div>
+                <div class="form-group">
+                    <label for="examLevel">Level:</label>
+                    <select id="examLevel" required>
+                        <option value="">Select level</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="county">County</option>
+                        <option value="provincial">Provincial</option>
+                        <option value="national">National</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="examDescription">Description (optional):</label>
+                    <textarea id="examDescription" placeholder="Brief description of the exam..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Exam Questions:</label>
+                    <div id="examQuestionsContainer">
+                        <!-- Questions will be added here dynamically -->
+                    </div>
+                    <button type="button" id="addExamQuestionBtn" class="btn btn-secondary">+ Add Question</button>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelExam" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Exam</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rule of the Day Modal -->
+    <div id="ruleOfDayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📖 Rule of the Day</h2>
+                <button class="close-btn" id="closeRuleModal">&times;</button>
+            </div>
+            <div class="rule-content">
+                <div class="rule-header">
+                    <h3 id="ruleOfDayTitle">Rule 4.1 - Overcarrying</h3>
+                    <span class="rule-date" id="ruleOfDayDate">Today</span>
+                </div>
+                <div class="rule-body">
+                    <p id="ruleOfDayText">A player may carry the ball for a maximum of four consecutive steps or hold it for no longer than the time needed to take four steps.</p>
+                </div>
+                <div class="rule-example">
+                    <h4>💡 Example:</h4>
+                    <p id="ruleOfDayExample">If a player catches the ball and runs more than four steps without bouncing, toe-tapping, or releasing the ball, it's a technical foul.</p>
+                </div>
+                <div class="rule-penalty">
+                    <h4>⚖️ Penalty:</h4>
+                    <p id="ruleOfDayPenalty">Free kick to the opposing team from where the foul occurred.</p>
+                </div>
+                <div class="rule-actions">
+                    <button id="addToFavoritesBtn" class="btn btn-secondary">❤️ Add to Favorites</button>
+                    <button id="practiceRuleBtn" class="btn btn-primary">🎯 Practice This Rule</button>
+                </div>
             </div>
         </div>
     </div>

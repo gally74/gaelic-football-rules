@@ -902,6 +902,9 @@ function showMainApp() {
     document.getElementById('landingPage').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
     
+    // Check admin status
+    checkAdminStatus();
+    
     if (isAdmin) {
         showAdminMode();
     } else {
@@ -924,9 +927,17 @@ function showUserMode() {
 }
 
 function checkAdminStatus() {
-    // Simple admin check - you can modify this logic
-    const adminKey = localStorage.getItem('gaaAdminKey');
-    return adminKey === 'admin123' || isAdmin;
+    // Check if user is admin based on stored password
+    const storedPassword = localStorage.getItem('gaaAdminPassword');
+    const adminPassword = 'cZ8lp41FF1QmzCF';
+    
+    if (storedPassword === adminPassword) {
+        isAdmin = true;
+        return true;
+    } else {
+        isAdmin = false;
+        return false;
+    }
 }
 
 function showAdminControls() {
@@ -1725,8 +1736,15 @@ function addVoiceInputToOptions() {
 function setupEventListeners() {
     // Landing page buttons
     document.querySelector('.admin-btn').addEventListener('click', () => {
-        isAdmin = true;
-        showMainApp();
+        const password = prompt('Enter admin password:');
+        if (password === 'cZ8lp41FF1QmzCF') {
+            localStorage.setItem('gaaAdminPassword', password);
+            isAdmin = true;
+            showMainApp();
+            showNotification('Admin access granted!', 'success');
+        } else if (password !== null) {
+            showNotification('Incorrect password!', 'error');
+        }
     });
     
     document.querySelector('.user-btn').addEventListener('click', () => {

@@ -34,6 +34,7 @@ body {
     color: #991b1b;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 .landing-subtitle {
@@ -41,6 +42,7 @@ body {
     color: #7f1d1d;
     margin-bottom: 3rem;
     font-weight: 500;
+    text-align: center;
 }
 
 .landing-buttons {
@@ -48,6 +50,7 @@ body {
     flex-direction: column;
     gap: 2rem;
     margin-bottom: 3rem;
+    align-items: center;
 }
 
 .landing-btn {
@@ -62,6 +65,8 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
     min-height: 120px;
+    width: 100%;
+    max-width: 600px;
 }
 
 .landing-btn:hover {
@@ -155,14 +160,15 @@ body {
     padding: 2rem;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     border: 2px solid #e5e7eb;
+    text-align: center;
 }
 
 .support-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
     gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .referee-photo {
@@ -184,18 +190,21 @@ body {
     font-weight: 600;
     color: #1e293b;
     margin-bottom: 0.25rem;
+    text-align: center;
 }
 
 .support-info p {
     font-size: 1rem;
     color: #64748b;
     margin: 0;
+    text-align: center;
 }
 
 .support-text {
     font-size: 1.125rem;
     color: #374151;
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .support-btn {
@@ -211,6 +220,7 @@ body {
     font-size: 1.125rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    margin: 0 auto;
 }
 
 .support-btn:hover {
@@ -1361,7 +1371,7 @@ input[type="radio"] {
     .modal-actions {
         flex-direction: column;
     }
-}
+} 
 
 /* Animations */
 @keyframes spin {

@@ -902,8 +902,10 @@ function showMainApp() {
     document.getElementById('landingPage').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
     
-    // Check admin status
-    checkAdminStatus();
+    // Only check admin status if not explicitly set to false
+    if (isAdmin !== false) {
+        checkAdminStatus();
+    }
     
     if (isAdmin) {
         showAdminMode();
@@ -1750,6 +1752,7 @@ function setupEventListeners() {
     document.querySelector('.user-btn').addEventListener('click', () => {
         isAdmin = false;
         showMainApp();
+        showUserMode(); // Ensure user mode is properly set
     });
     
     // Back to Landing button

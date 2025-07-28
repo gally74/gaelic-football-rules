@@ -1752,6 +1752,14 @@ function setupEventListeners() {
         showMainApp();
     });
     
+    // Back to Landing button
+    const backToLandingBtn = document.getElementById('backToLandingBtn');
+    if (backToLandingBtn) {
+        backToLandingBtn.addEventListener('click', () => {
+            showLandingPage();
+        });
+    }
+    
     // Modal controls
     if (closeModal) closeModal.addEventListener('click', () => hideModal(addQuestionModal));
     if (cancelAdd) cancelAdd.addEventListener('click', () => hideModal(addQuestionModal));

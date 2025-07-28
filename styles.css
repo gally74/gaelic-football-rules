@@ -159,6 +159,30 @@ body {
     color: var(--secondary-color);
 }
 
+/* Access Badges */
+.access-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+}
+
+.admin-badge {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+}
+
+.user-badge {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    color: white;
+    box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
 .btn-icon {
     font-size: 2.5rem;
     margin-right: 1.5rem;
@@ -183,6 +207,11 @@ body {
     .landing-page {
         padding: 1rem;
         min-height: 100vh;
+    }
+    
+    .access-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
     }
     
     .landing-content {
@@ -250,6 +279,11 @@ body {
 @media (max-width: 480px) {
     .landing-page h1 {
         font-size: 2rem;
+    }
+    
+    .access-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.5rem;
     }
     
     .landing-subtitle {
